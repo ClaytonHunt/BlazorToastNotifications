@@ -1,0 +1,36 @@
+﻿@page "/"
+@using Toast.Services
+@inject IToastNotificationService ToastService
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<ToastRenderer OnRenderComplete="@SetFragment">
+    <FetchData />
+</ToastRenderer>
+
+<button @onclick="Show">Show</button>
+<button @onclick="Close">Close</button>
+
+@code
+{
+    public RenderFragment Toast { get; set; }
+
+    public void SetFragment(RenderFragment fragment) 
+    {
+        Toast = fragment;
+    }
+
+    public void Show() 
+    {
+        ToastService.Show(Toast);
+    }
+
+    public void Close() 
+    {
+        ToastService.Close();
+    }
+}

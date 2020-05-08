@@ -1,0 +1,16 @@
+@code 
+{
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<RenderFragment> OnRenderComplete { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender) 
+        {
+            OnRenderComplete.InvokeAsync(ChildContent);
+        }
+    }
+}
