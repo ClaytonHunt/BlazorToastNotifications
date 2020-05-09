@@ -154,7 +154,7 @@ app {
     transform: translateY(0);
 }
 
-.sample-toast {
+.standard-toast {
     display: grid;
     padding: 20px;
 }

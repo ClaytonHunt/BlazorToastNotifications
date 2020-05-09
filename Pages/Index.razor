@@ -17,9 +17,9 @@
     <button class="btn btn-primary" @onclick="@ShowStandardToast">Show Toast</button>
 </div>
 
-<ToastRenderer OnRenderComplete="@SetFragment">
+<ToastNotification OnRenderComplete="@SetFragment">
     <SampleToast />
-</ToastRenderer>
+</ToastNotification>
 
 @code
 {
