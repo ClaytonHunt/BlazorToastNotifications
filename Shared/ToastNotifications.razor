@@ -1,34 +1,81 @@
 @using Toast.Services
+@using System.Timers
+@using Toast.Models
 
 @inject IToastNotificationService ToastService
 
-<div class="blazor-toast @activeClass">
-   @Content
+<div class="blazor-toast @activeClass" @onmouseover="@OnMouseOver" @onmouseout="@OnMouseLeave">
+    @if (toast != null && ToastTypes.Template == toast.Type) 
+    {
+        @toast.Template
+    } else 
+    {
+        <StandardToast Toast="@toast" /> 
+    }
 </div>
 
 @code 
 {
     public List<string> Toasts { get; set; }
 
-    public RenderFragment Content { get; set;}
+    public ToastMessage toast { get; set; } = new ToastMessage();
 
     public bool IsActive { get; set; } = false;
 
     public string activeClass => IsActive ? "active" : "";
 
+    private Timer closingTimer { get; set; }
+
     protected override void OnInitialized()
     {
         ToastService.watchToastQueue()
-            .Subscribe((RenderFragment fragment) => {
-                Content = fragment;
+            .Subscribe((ToastMessage m) => {
+                toast = m;
                 IsActive = true;
+                StartCloseTimer();
                 StateHasChanged();
             });
 
         ToastService.watchToastDismiss()
             .Subscribe((dynamic value) => {
-                IsActive = false;                
-                StateHasChanged();
+                ClosingSequence();
             });
+    }
+
+    public void OnMouseOver(MouseEventArgs e) 
+    {
+        closingTimer.Stop();
+    }
+
+    public void OnMouseLeave(MouseEventArgs e) 
+    {
+        closingTimer.Start();
+    }
+
+    private void StartCloseTimer()
+    {
+        closingTimer = new Timer(3000);
+        closingTimer.Elapsed += QueueClosing;
+        closingTimer.Enabled = true;
+        closingTimer.AutoReset = false;
+
+    }
+
+    private void QueueClosing(Object src, ElapsedEventArgs e)
+    {
+       ClosingSequence();       
+    }
+
+    private void ClosingSequence() 
+    {
+        IsActive = false;
+        closingTimer.Dispose();
+        StateHasChanged();
+        Task.Delay(500).ContinueWith((task) => EmitClose());        
+    }
+
+    private void EmitClose()
+    {
+        ToastService.Close();
     }
 }
