@@ -1,13 +1,14 @@
 using System.Reactive.Subjects;
-using Microsoft.AspNetCore.Components;
+using Toast.Models;
 
 namespace Toast.Services
 {
     public interface IToastNotificationService
     {
-        Subject<RenderFragment> watchToastQueue();
+        Subject<ToastMessage> watchToastQueue();
         Subject<dynamic> watchToastDismiss();
-        void Show(RenderFragment fragment);
+        void Show(ToastMessage toast);
+        void Dismiss();
         void Close();
     }
 }

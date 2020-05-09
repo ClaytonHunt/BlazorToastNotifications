@@ -1,14 +1,19 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
-using Microsoft.AspNetCore.Components;
+using Toast.Models;
 
 namespace Toast.Services
 {
     public class ToastNotificationService : IToastNotificationService
     {
-        public Subject<RenderFragment> toastQueue = new Subject<RenderFragment>();
+        public Subject<ToastMessage> toastQueue = new Subject<ToastMessage>();
         public Subject<dynamic> toastDismiss = new Subject<dynamic>();
+        
+        private List<ToastMessage> toasts = new List<ToastMessage>();
+        private bool activeToast = false;
 
-        public  Subject<RenderFragment> watchToastQueue() 
+        public  Subject<ToastMessage> watchToastQueue() 
         {
             return toastQueue;
         }
@@ -18,14 +23,32 @@ namespace Toast.Services
             return toastDismiss;
         }
 
-        public void Show(RenderFragment fragment)
+        public void Show(ToastMessage toast)
         {
-            toastQueue.OnNext(fragment);
+            if (!activeToast) 
+            {
+                activeToast = true;
+                toastQueue.OnNext(toast);
+            } else {
+                toasts.Add(toast);
+            }
+        }
+
+        public void Dismiss() 
+        {
+            toastDismiss.OnNext(null);
         }
 
         public void Close() 
         {
-            toastDismiss.OnNext(null);
+            activeToast = false;
+            
+            if (toasts.Count > 0) 
+            {
+                var next = toasts.First();
+                toasts.RemoveAt(0);
+                Show(next);
+            }
         }
     }
 }
