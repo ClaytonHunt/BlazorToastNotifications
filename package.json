@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm install && node server.js",
     "build:prod": "dotnet publish --output ./dist && cp -r ./dist/Toast/dist/ ./public"
   },
   "repository": {
