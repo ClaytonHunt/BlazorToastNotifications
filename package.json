@@ -1,0 +1,23 @@
+{
+  "name": "Toast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/James-H33/BlazorToastNotifications.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/James-H33/BlazorToastNotifications/issues"
+  },
+  "homepage": "https://github.com/James-H33/BlazorToastNotifications#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
